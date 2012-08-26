@@ -2,7 +2,7 @@
   "author": "Omar Gonzalez <omar@almerblank.com> (http://almerblank.com)",
   "name": "rebar",
   "description": "JavaScript code generation tool",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "dependencies": {},
   "devDependencies": {
     "cucumber": "0.2.19",
