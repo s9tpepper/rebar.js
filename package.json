@@ -1,0 +1,19 @@
+{
+  "author": "Omar Gonzalez <omar@almerblank.com> (http://almerblank.com)",
+  "name": "rebar",
+  "description": "JavaScript code generation tool",
+  "version": "0.1.0",
+  "dependencies": {},
+  "devDependencies": {
+    "cucumber": "0.2.19",
+    "jasmine-node": "1.0.26",
+    "grunt": "0.3.12",
+    "grunt-contrib": "0.1.4",
+    "grunt-cucumber": "0.1.1",
+    "jshint": "0.7.3"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
