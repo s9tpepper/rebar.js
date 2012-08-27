@@ -19,7 +19,7 @@ module.exports = function (grunt) {
       tags: "~@Pending"
     },
     lint: {
-      all: ['source/*.js']
+      all: ['lib/**']
     },
     jshint: {
       options: {
@@ -34,7 +34,8 @@ module.exports = function (grunt) {
         boss: true,
         eqnull: true,
         node: true,
-        es5: true
+        es5: true,
+        multistr: true
       },
       globals: {}
     },
