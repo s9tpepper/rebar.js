@@ -3,7 +3,9 @@
   "name": "rebar",
   "description": "JavaScript code generation tool",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "colors": "~0.6.0"
+  },
   "devDependencies": {
     "cucumber": "0.2.19",
     "jasmine-node": "1.0.26",

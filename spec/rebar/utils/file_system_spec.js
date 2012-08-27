@@ -77,4 +77,41 @@ describe("FileSystem", function () {
       })
     });
   });
+
+  describe("dirExistsInPwd()", function () {
+    it("gets the cwd", function () {
+      fileSystem.dirExistsInPwd();
+      expect(nodeProcess.cwd).toHaveBeenCalled();
+    });
+
+    it("gets the list of files in the cwd", function () {
+      fileSystem.dirExistsInPwd();
+
+      expect(fs.readdirSync).toHaveBeenCalledWith(currentWorkingDirectory);
+    });
+
+    describe("when the list has the folder being searched in it", function () {
+      beforeEach(function () {
+        fs.readdirSync.andReturn(["somefile.txt", ".rebar"]);
+      });
+
+      it("returns true", function () {
+        var folderSearch = ".rebar";
+        var rebarExists = fileSystem.dirExistsInPwd(folderSearch);
+        expect(rebarExists).toBe(true);
+      });
+    });
+
+    describe("when the list does not have the folder being searched for in it", function () {
+      beforeEach(function () {
+        fs.readdirSync.andReturn(["someFile.txt"]);
+      });
+
+      it("returns false", function () {
+        var folderSearch = ".rebar";
+        var rebarExists = fileSystem.dirExistsInPwd(folderSearch);
+        expect(rebarExists).toBe(false);
+      });
+    });
+  });
 });

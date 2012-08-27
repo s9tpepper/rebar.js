@@ -8,6 +8,11 @@ Feature: $ rebar init
   templates, providing a way to customize the code templates for the project
   as well as configuring some rebar options specific to the project.
 
+  Scenario: User runs 'rebar init' in a folder that has a .rebar folder
+    Given the current working directory is not empty
+    When the 'rebar init' command is executed
+    Then the .rebar folder exists error is sent to the console
+
   Scenario: User runs 'rebar init' in an empty folder
     Given the current working directory is empty
     When the 'rebar init' command is executed
