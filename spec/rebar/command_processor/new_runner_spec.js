@@ -92,7 +92,7 @@ describe("NewRunner()", function () {
         it("creates the project folder", function () {
           newRunner.execute(commandArguments);
 
-          expect(newRunner.createProjectFolder).toHaveBeenCalledWith(commandArguments);
+          expect(newRunner.createProjectFolder).toHaveBeenCalledWith(projectName, commandArguments);
         });
       });
 
