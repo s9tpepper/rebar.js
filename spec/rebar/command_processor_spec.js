@@ -4,9 +4,9 @@ describe("CommandProcessor", function () {
 
   var CommandProcessor = require("../../lib/rebar/command_processor");
   var commandProcessor, logger, command, InitRunner, initRunner,
-      ProjectRunner, projectRunner;
+      NewRunner, newRunner;
 
-  var knownCommands = ["init","project","class","feature","test"];
+  var knownCommands = ["new","class","feature","test","help", "rebuild"];
 
   beforeEach(function () {
     command = jasmine.createSpy("command-name");
@@ -17,9 +17,9 @@ describe("CommandProcessor", function () {
     InitRunner = jasmine.createSpy("InitRunner").andReturn(initRunner);
     CommandProcessor.InitRunner = InitRunner;
 
-    projectRunner = createSpyWithStubs("project command runner", {execute: null});
-    ProjectRunner = jasmine.createSpy("ProjectRunner").andReturn(projectRunner);
-    CommandProcessor.ProjectRunner = ProjectRunner;
+    newRunner = createSpyWithStubs("new command runner", {execute: null});
+    NewRunner = jasmine.createSpy("NewRunner").andReturn(newRunner);
+    CommandProcessor.NewRunner = NewRunner;
 
     commandProcessor = CommandProcessor();
   });
@@ -96,7 +96,7 @@ describe("CommandProcessor", function () {
         var expectedCommandError = CommandProcessor.COMMAND_NOT_FOUND_ERROR.replace("%COMMAND%", command);
 
         commandProcessor.process(command, commandArguments);
-                                                            1
+
         expect(logger.error).toHaveBeenCalledWith(expectedCommandError);
       });
     });
@@ -123,21 +123,21 @@ describe("CommandProcessor", function () {
       });
     });
 
-    describe("when the command is 'project'", function () {
+    describe("when the command is 'new'", function () {
       beforeEach(function () {
-        command = "project";
+        command = "new";
       });
 
-      it("creates a ProjectRunner", function () {
+      it("creates a NewRunner", function () {
         commandProcessor.getRunnerFor(command);
 
-        expect(CommandProcessor.ProjectRunner).toHaveBeenCalled();
+        expect(CommandProcessor.NewRunner).toHaveBeenCalled();
       });
 
-      it("returns an ProjectRunner instance", function () {
+      it("returns an NewRunner instance", function () {
         var runner = commandProcessor.getRunnerFor(command);
 
-        expect(runner).toBe(projectRunner);
+        expect(runner).toBe(newRunner);
       });
     });
 
