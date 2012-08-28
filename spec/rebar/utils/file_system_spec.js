@@ -85,7 +85,7 @@ describe("FileSystem", function () {
     });
 
     it("gets the list of files in the cwd", function () {
-      fileSystem.dirExistsInPwd();
+      fileSystem.dirExistsInPwd("dirName");
 
       expect(fs.readdirSync).toHaveBeenCalledWith(currentWorkingDirectory);
     });
