@@ -5,7 +5,7 @@ describe("CommandProcessor", function () {
   var CommandProcessor = require("../../lib/rebar/command_processor");
   var commandProcessor, logger, command, NewRunner, newRunner;
 
-  var knownCommands = ["new","amd","cjs","feature","help","rebuild"];
+  var knownCommands = ["new","amd","cjs","feature","help"];
 
   beforeEach(function () {
     command = jasmine.createSpy("command-name");
