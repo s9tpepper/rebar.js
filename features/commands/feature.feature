@@ -1,7 +1,7 @@
 Feature: $ rebar feature MyFeature
   As a JS dev that uses Cucumber.js
   I want a feature command
-  So that I can generate class and step definition stub for Cucumber.js features
+  So that I can generate feature file and step definition stub for Cucumber.js features
 
   Scenario: User runs 'rebar feature MyFeature' in a rebar project root where the MyFeature files don't exist
     Given the user is in the root folder of a rebar.js project
