@@ -1,4 +1,4 @@
-Feature: $ rebar.js new project_name
+Feature: $ rebar new project_name
   As a JavaScript developer
   I want a new command
   So that I can quickly create a new JavaScript project
