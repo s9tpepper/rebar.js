@@ -21,6 +21,7 @@ var new_steps = function new_steps() {
   });
 
   this.After(function (callback) {
+    deleteTempDir(this);
     lastCommandError = null;
     lastCommandStderr = null;
     lastCommandStdout = null;
