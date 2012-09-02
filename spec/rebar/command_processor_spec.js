@@ -3,8 +3,7 @@ require("../support/spec_helper");
 describe("CommandProcessor", function () {
 
   var CommandProcessor = require("../../lib/rebar/command_processor");
-  var commandProcessor, logger, command, InitRunner, initRunner,
-      NewRunner, newRunner;
+  var commandProcessor, logger, command, NewRunner, newRunner;
 
   var knownCommands = ["new","class","feature","test","help", "rebuild"];
 
@@ -12,10 +11,6 @@ describe("CommandProcessor", function () {
     command = jasmine.createSpy("command-name");
     logger = createSpyWithStubs("logger", {error: null});
     CommandProcessor.Logger = jasmine.createSpy("Logger").andReturn(logger);
-
-    initRunner = createSpyWithStubs("init command runner", {execute: null});
-    InitRunner = jasmine.createSpy("InitRunner").andReturn(initRunner);
-    CommandProcessor.InitRunner = InitRunner;
 
     newRunner = createSpyWithStubs("new command runner", {execute: null});
     NewRunner = jasmine.createSpy("NewRunner").andReturn(newRunner);
@@ -103,25 +98,6 @@ describe("CommandProcessor", function () {
   });
 
   describe("getRunnerFor()", function () {
-
-    describe("when the command is 'init'", function () {
-
-      beforeEach(function () {
-        command = "init";
-      });
-
-      it("creates an InitRunner", function () {
-        commandProcessor.getRunnerFor(command);
-
-        expect(CommandProcessor.InitRunner).toHaveBeenCalled();
-      });
-
-      it("returns an InitRunner instance", function () {
-        var runner = commandProcessor.getRunnerFor(command);
-
-        expect(runner).toBe(initRunner);
-      });
-    });
 
     describe("when the command is 'new'", function () {
       beforeEach(function () {

@@ -14,15 +14,22 @@ var World = function (callback) {
     for (var i = 0; i < directoryContents.length; i++) {
       directoryPath = path + "/" + directoryContents[i];
 
-      fStats = fs.statSync(directoryPath);
+      if (fs.existsSync(directoryPath)) {
+        fStats = fs.statSync(directoryPath);
 
-      if (fStats.isFile()) {
-        fs.unlinkSync(directoryPath);
-      } else if (fStats.isDirectory()) {
-        world.deleteDirectory(directoryPath);
+        if (fStats.isFile()) {
+          fs.unlinkSync(directoryPath);
+        } else if (fStats.isDirectory()) {
+          world.deleteDirectory(directoryPath);
+        }
       }
     }
-    fs.rmdirSync(path);
+
+    if (0 == fs.readdirSync(path).length) {
+      fs.rmdirSync(path);
+    } else {
+      world.deleteDirectory(path);
+    }
   };
 
   World.mostRecentInstance = this;

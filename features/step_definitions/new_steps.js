@@ -43,17 +43,18 @@ var new_steps = function new_steps() {
     }
   });
 
+  var child;
   this.When(/^the command "([^"]*)" is run$/, function(command, callback) {
     var exec = require("child_process").exec;
     var cmd = "../bin/" + command;
 
-    var child = exec(cmd, function (error, stdout, stderr) {
+    child = exec(cmd, function (error, stdout, stderr) {
       lastCommandError = error;
       lastCommandStderr = stderr;
       lastCommandStdout = stdout;
 
       if (null === error) {
-        child.kill();
+//        child.kill();
         callback();
       } else {
         console.log("error:");
@@ -68,19 +69,43 @@ var new_steps = function new_steps() {
 
   this.Then(/^"([^"]*)" is created in the current working directory$/, function(path, callback) {
     // express the regexp above with the code you wish you had
-    var pathExists = fs.existsSync(path);
-    assert.ok(pathExists, "Path does not exist at: " + path);
+    function checkPath() {
+      var pathExists = fs.existsSync(path);
+      assert.ok(pathExists, "Path does not exist at: " + process.cwd() + path);
+      callback();
+    }
+
+    if (path.search("node_modules") > -1) {
+      setTimeout(checkPath, 3000);
+    } else {
+      checkPath();
+    }
+  });
+
+  this.Given(/^the current working directory has a folder named "([^"]*)"$/, function(projectName, callback) {
+    deleteTempDir(this);
+    fs.mkdirSync(tempDirectory);
+
+    var testProjectPath = tempDirectory+"/"+projectName;
+    fs.mkdirSync(testProjectPath);
+
+    process.chdir(tempDirectory);
+
+    assert.ok(fs.existsSync(testProjectPath));
+
     callback();
   });
 
-  this.Given(/^the current working directory has a folder named "([^"]*)"$/, function(arg1, callback) {
-    // express the regexp above with the code you wish you had
-    callback.pending();
-  });
-
   this.Then(/^the folder exists with project name error is outputted to console$/, function(callback) {
-    // express the regexp above with the code you wish you had
-    callback.pending();
+    var expectedError = ">> ERROR".red + " :: A directory already exists with the name you've chosen for your project.\n";
+
+    assert.equal(lastCommandStdout, expectedError, "pwd: " + process.cwd() + "\n\
+    lastCommandError = " + lastCommandError + "\n\
+    lastCommandStderr = " + lastCommandStderr + "\n\
+    lastCommandStdout = '" + lastCommandStdout + "'\n\
+    ");
+
+    callback();
   });
 };
 

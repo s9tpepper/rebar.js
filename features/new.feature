@@ -3,18 +3,20 @@ Feature: $ rebar.js new project_name
   I want a new command
   So that I can quickly create a new JavaScript project
 
-  The 'rebar.js new projectname' command will create a new folder named
+  The 'rebar new projectname' command will create a new folder named
   'projectname' in the current working directory and it will generate
   all of the initial project files
 
-  Scenario: The new command is run in a directory that does not have a folder with that project name
+  Scenario: The new command is run in a directory that does not have a folder with that project name and no flags
     Given the current working directory does not have a folder named "my_project"
-    When the command "rebar.js new my_project" is run
+    When the command "rebar new my_project" is run
     Then "./my_project" is created in the current working directory
     And "./my_project/.rebar" is created in the current working directory
     And "./my_project/.rebar/rebar.json" is created in the current working directory
     And "./my_project/.rebar/class.js" is created in the current working directory
+    And "./my_project/.rebar/class_require.js" is created in the current working directory
     And "./my_project/.rebar/unit_test.js" is created in the current working directory
+    And "./my_project/.rebar/unit_test_require.js" is created in the current working directory
     And "./my_project/.rebar/step_definition.js" is created in the current working directory
     And "./my_project/.rebar/cucumber.feature" is created in the current working directory
     And "./my_project/package.json" is created in the current working directory
@@ -30,5 +32,6 @@ Feature: $ rebar.js new project_name
 
   Scenario: The new command is run in a directory that has a folder with the desired project name
     Given the current working directory has a folder named "project"
-    When the command "rebar.js new project" is run
+    When the command "rebar new project" is run
     Then the folder exists with project name error is outputted to console
+
