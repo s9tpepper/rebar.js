@@ -49,8 +49,7 @@ module.exports = function (grunt) {
 
   grunt.loadNpmTasks('grunt-contrib');
   grunt.loadNpmTasks('grunt-cucumber');
-
-  grunt.loadTasks("tasks");
+  grunt.loadNpmTasks('grunt-jasmine-node');
 
   grunt.registerTask('default', 'lint jasmine_node cucumberjs');
   grunt.registerTask('cuke', 'lint cucumberjs');
