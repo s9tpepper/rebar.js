@@ -10,8 +10,29 @@ describe("FileSystem", function () {
     newDirPath = createSpyWithStubs("new directory path", {});
     currentWorkingDirectory = createSpyWithStubs("process cwd", {concat: newDirPath});
     nodeProcess = createSpyWithStubs("node process object", {cwd: currentWorkingDirectory});
-    fs = createSpyWithStubs("node fs module", {mkdirSync: null, writeFileSync: null, readdirSync: [], existsSync: null});
+    fs = createSpyWithStubs("node fs module", {mkdirSync: null, writeFileSync: null, readdirSync: [], existsSync: null, readFileSync: "contents"});
     fileSystem = FileSystem(fs, nodeProcess);
+  });
+
+  describe("readFile", function () {
+    beforeEach(function () {
+    });
+
+    it("reads the file using the fs module synchronously", function () {
+      var filePath = "/path/to/file.js";
+
+      fileSystem.readFile(filePath);
+
+      expect(fs.readFileSync).toHaveBeenCalledWith(filePath);
+    });
+
+    it("returns the file contents as a string", function () {
+      var filePath = "/path/to/file.js";
+
+      var contents = fileSystem.readFile(filePath);
+
+      expect(contents).toBe("contents");
+    });
   });
 
   describe("makeDirInPwd()", function () {
