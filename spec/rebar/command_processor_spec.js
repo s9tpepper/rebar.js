@@ -3,7 +3,7 @@ require("../support/spec_helper");
 describe("CommandProcessor", function () {
 
   var CommandProcessor = require("../../lib/rebar/command_processor");
-  var commandProcessor, logger, command, NewRunner, newRunner;
+  var commandProcessor, logger, command, NewRunner, newRunner, CjsRunner, cjsRunner;
 
   var knownCommands = ["new","amd","cjs","feature","help"];
 
@@ -15,6 +15,10 @@ describe("CommandProcessor", function () {
     newRunner = createSpyWithStubs("new command runner", {execute: null});
     NewRunner = jasmine.createSpy("NewRunner").andReturn(newRunner);
     CommandProcessor.NewRunner = NewRunner;
+
+    cjsRunner = createSpyWithStubs("cjs command runner", {execute: null});
+    CjsRunner = jasmine.createSpy("CjsRunner").andReturn(cjsRunner);
+    CommandProcessor.CjsRunner = CjsRunner;
 
     commandProcessor = CommandProcessor();
   });
@@ -114,6 +118,18 @@ describe("CommandProcessor", function () {
         var runner = commandProcessor.getRunnerFor(command);
 
         expect(runner).toBe(newRunner);
+      });
+    });
+
+    describe("when the command is 'cjs'", function () {
+      beforeEach(function () {
+        command = "cjs";
+      });
+
+      it("creates a CjsRunner", function () {
+        commandProcessor.getRunnerFor(command);
+
+        expect(CommandProcessor.CjsRunner).toHaveBeenCalled();
       });
     });
 
