@@ -1,3 +1,4 @@
+@Pending
 Feature: $ rebar feature MyFeature
   As a JS dev that uses Cucumber.js
   I want a feature command

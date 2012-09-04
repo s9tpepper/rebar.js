@@ -1,3 +1,4 @@
+@Pending
 Feature: $ rebar amd MyClass
   As a JS dev that uses requirejs and other amd module loaders
   I want an amd command
