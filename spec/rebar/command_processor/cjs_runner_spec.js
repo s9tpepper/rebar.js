@@ -1,14 +1,20 @@
 require("../../support/spec_helper");
+var path = require("path");
 var CjsRunner = require("../../../lib/rebar/command_processor/cjs_runner");
 
 describe("CjsRunner()", function () {
-  var cjsRunner, fileSystem, logger, commandArguments, className;
+  var cjsRunner, fileSystem, logger, commandArguments, className, contents, classContents, finalTestContents,
+    pathParts;
 
   beforeEach(function () {
-    className = "ClassName";
+    pathParts = ["deep", "deeper", "ClassName"];
+    className = createSpyWithStubs("deep/deeper/ClassName", {lastIndexOf: 3, charAt: "C", toLowerCase: "c", slice: "lassName", split: pathParts});
     commandArguments = [className];
 
-    fileSystem = createSpyWithStubs("file system", {dirExistsInPwd: null});
+    finalTestContents = createSpyWithStubs("final test contents", {replace: "test"});
+    classContents = createSpyWithStubs("class contents", {replace: finalTestContents});
+    contents = createSpyWithStubs("contents string", {replace: classContents});
+    fileSystem = createSpyWithStubs("file system", {dirExistsInPwd: null, readFile: contents, makeFileInPwd: null, makeDirInPwd: null});
     CjsRunner.FileSystem = jasmine.createSpy("file system").andReturn(fileSystem);
 
     logger = createSpyWithStubs("logger", {error: null});
@@ -29,6 +35,7 @@ describe("CjsRunner()", function () {
 
   describe("execute()", function () {
     beforeEach(function () {
+      className = "ClassName";
       spyOn(commandArguments, "shift").andReturn(className);
       spyOn(cjsRunner, "checkIfClassFilesExist");
     });
@@ -175,6 +182,107 @@ describe("CjsRunner()", function () {
 
         expect(filesExist).toBe(true);
       });
+    });
+  });
+
+  describe("createClass()", function () {
+    beforeEach(function () {
+      spyOn(pathParts, "pop").andReturn("ClassName");
+    });
+
+    it("reads the class.js file", function () {
+      cjsRunner.createClass(className);
+
+      expect(fileSystem.readFile).toHaveBeenCalledWith("./.rebar/class.js");
+    });
+
+    it("replaces the class name token with the class name", function () {
+      cjsRunner.createClass(className);
+
+      expect(contents.replace).toHaveBeenCalledWith(/%CLASS_NAME%/gm, className);
+    });
+
+    it("splits the className by the path separator", function () {
+      cjsRunner.createClass(className);
+
+      expect(className.split).toHaveBeenCalledWith(path.sep);
+    });
+
+    it("pops the actual class name off the path parts array", function () {
+      cjsRunner.createClass(className);
+
+      expect(pathParts.pop).toHaveBeenCalled();
+    });
+
+    it("makes sure the path to the new class exists", function () {
+      cjsRunner.createClass(className);
+
+      expect(fileSystem.makeDirInPwd).toHaveBeenCalledWith("source/deep");
+      expect(fileSystem.makeDirInPwd).toHaveBeenCalledWith("source/deep/deeper");
+    });
+
+    it("makes the file", function () {
+      cjsRunner.createClass(className);
+
+      expect(fileSystem.makeFileInPwd).toHaveBeenCalledWith("source/"+className+".js", classContents);
+    });
+  });
+
+  describe("createSpec()", function () {
+
+    beforeEach(function () {
+      spyOn(pathParts, "pop").andReturn("ClassName");
+    })
+
+    it("splits the class name by the path separator", function () {
+      cjsRunner.createSpec(className);
+
+      expect(className.split).toHaveBeenCalledWith(path.sep);
+    });
+
+    it("pops the class name off the path parts array", function () {
+      cjsRunner.createSpec(className);
+
+      expect(pathParts.pop).toHaveBeenCalled();
+    });
+
+    it("makes sure the path to the new class exists", function () {
+      cjsRunner.createSpec(className);
+
+      expect(fileSystem.makeDirInPwd).toHaveBeenCalledWith("spec/deep");
+      expect(fileSystem.makeDirInPwd).toHaveBeenCalledWith("spec/deep/deeper");
+    });
+
+    it("reads the unit_test.js file", function () {
+      cjsRunner.createSpec(className);
+
+      expect(fileSystem.readFile).toHaveBeenCalledWith("./.rebar/unit_test.js");
+    });
+
+    it("replaces the class name token with the class name", function () {
+      cjsRunner.createSpec(className);
+
+      expect(contents.replace).toHaveBeenCalledWith(/%CLASS_NAME%/gm, "ClassName");
+    });
+
+    it("replaces the class var token with the class instance var name", function () {
+      var classVarName = "className";
+
+      cjsRunner.createSpec(className);
+
+      expect(classContents.replace).toHaveBeenCalledWith(/%CLASS_VAR%/gm, classVarName);
+    });
+
+    it("replaces the class depth with correct relative path", function () {
+      cjsRunner.createSpec("deep/deeper/ClassName");
+
+      expect(finalTestContents.replace).toHaveBeenCalledWith(/%CLASS_DEPTH%/gm, "../../../source/deep/deeper/ClassName");
+    });
+
+    it("makes the file", function () {
+      cjsRunner.createSpec("deep/deeper/ClassName");
+
+      expect(fileSystem.makeFileInPwd).toHaveBeenCalledWith("spec/deep/deeper/ClassName_spec.js", "test");
     });
   });
 });
