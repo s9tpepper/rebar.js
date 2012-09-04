@@ -11,7 +11,7 @@ Feature: $ rebar help
       rebar - A JavaScript code generation tool.
 
       Usage
-        grunt [cmd] [args]
+        rebar [cmd] [args]
 
       Commands
            new   Creates a new project folder and files
