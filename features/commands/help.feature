@@ -1,4 +1,3 @@
-@Pending
 Feature: $ rebar help
   As a rebar user
   I want a help command
